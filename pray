@@ -1,0 +1,28 @@
+echo "# prayerbot" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/fahidijaz/prayerbot.git
+git push -u origin main
+const axios = require('axios');
+
+// Command to get prayer times
+client.on('message', async (message) => {
+    if (message.content.toLowerCase() === '!prayer') {
+        try {
+            const response = await axios.get('PRAYER_TIMES_API_ENDPOINT', {
+                params: {
+                    // Include necessary parameters (e.g., city, country, method)
+                    // Add your API key if required
+                },
+            });
+
+            const prayerTimes = response.data.data.timings;
+            message.channel.send(`Prayer Times:\nFajr: ${prayerTimes.Fajr}\nDhuhr: ${prayerTimes.Dhuhr}\nAsr: ${prayerTimes.Asr}\nMaghrib: ${prayerTimes.Maghrib}\nIsha: ${prayerTimes.Isha}`);
+        } catch (error) {
+            console.error('Error fetching prayer times:', error);
+            message.channel.send('Error fetching prayer times. Please try again later.');
+        }
+    }
+});
